@@ -5,7 +5,7 @@ AI codes, CATIA_V5_EasyToolbar integrates, delivering enterprise-grade CATIA plu
 
 https://www.catiadev.com
 
-https://github.com/looksail
+https://github.com/looksail/CATIA_V5_EasyToolbar
 
 ---
 
