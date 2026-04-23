@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CATIA V5 EasyToolbar - Professional CATIA Development Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #00d4ff;
+      --primary-dark: #00a8cc;
+      --secondary: #7c3aed;
+      --accent: #f59e0b;
+      --bg-dark: #0a0a0f;
+      --bg-card: #111118;
+      --bg-elevated: #1a1a24;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --text-muted: #6b7280;
+      --border: #2a2a3a;
+      --gradient-1: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+      --gradient-2: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+      --shadow-glow: 0 0 40px rgba(0, 212, 255, 0.15);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gradient-1);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 140px 5% 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(1.5rem, 2vw, 2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero-text h1 span {
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Slogan Banner - 核心修改部分 */
+    .slogan-banner {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(124, 58, 237, 0.15) 100%);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 20px 24px; /* 增加内边距适配更大字体 */
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      width: 100%; /* 确保横幅宽度100% */
+      /* 新增闪光动画相关 */
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 闪光效果伪元素 */
+    .slogan-banner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      animation: shine 2s infinite linear;
+      z-index: 2;
+    }
+
+    /* 闪光动画 */
+    @keyframes shine {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    .slogan-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-1);
+      z-index: 1;
+    }
+
+    .slogan-banner p {
+      font-size: 1.3rem; /* 字体改大一号（原1.1rem） */
+      font-weight: 600;
+      color: var(--primary);
+      margin: 0;
+      text-align: center;
+      position: relative;
+      z-index: 3; /* 确保文字在闪光层上方 */
+    }
+
+    .slogan-banner .highlight {
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .hero-text > p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      max-width: 500px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-1);
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(0, 212, 255, 0.25);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-elevated);
+      border-color: var(--primary);
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .card-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .feature-list {
+      list-style: none;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .feature-list li:last-child {
+      border-bottom: none;
+    }
+
+    .feature-list i {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    /* Stats Section */
+    .stats {
+      padding: 80px 5%;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-top: 8px;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 120px 5%;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 80px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 span {
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+    }
+
+    .features-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      background: var(--gradient-1);
+      transition: height 0.3s ease;
+    }
+
+    .feature-card:hover::before {
+      height: 3px;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 212, 255, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--bg-elevated);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+      background: var(--gradient-1);
+      color: white;
+    }
+
+    .feature-card h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* Solutions Section */
+    .solutions {
+      padding: 120px 5%;
+      background: var(--bg-card);
+    }
+
+    .solutions-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+    }
+
+    .solution-card {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .solution-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .solution-number {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .solution-header h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .solution-card p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .solution-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 6px 12px;
+      background: var(--bg-elevated);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    /* Pricing Section */
+    .pricing {
+      padding: 120px 5%;
+    }
+
+    .pricing-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .pricing-card.featured::before {
+      content: attr(data-label);
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gradient-1);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .pricing-header {
+      margin-bottom: 32px;
+    }
+
+    .pricing-header h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .pricing-header p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .pricing-price {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .pricing-price span {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .pricing-features li i {
+      color: var(--primary);
+    }
+
+    .pricing-features li.disabled {
+      color: var(--text-muted);
+    }
+
+    .pricing-features li.disabled i {
+      color: var(--text-muted);
+    }
+
+    .pricing-card .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 120px 5%;
+      background: var(--bg-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
+    }
+
+    .cta-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .cta h2 span {
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cta p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+      margin-bottom: 40px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 60px 5% 30px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+    }
+
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 24px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-elevated);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border);
+    }
+
+    .social-links a:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .footer-links h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 12px;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 60px auto 0;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-text p {
+        margin: 0 auto 40px;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .slogan-banner {
+        margin: 0 auto 24px;
+        max-width: 100%; /* 响应式下也保持100%宽度 */
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .features-grid,
+      .solutions-grid,
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .slogan-banner p {
+        font-size: 1.15rem; /* 移动端适配字体大小 */
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">CATIA_V5_EasyToolbar</div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#solutions">Solutions</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <!-- Slogan Banner - 修改后的横幅 -->
+        <div class="slogan-banner">
+          <p>AI writes code, I integrate; <span class="highlight">10 minutes</span> to build enterprise CATIA plugins</p>
+        </div>
+        <h1>CATIA V5 <span>EasyToolbar</span><br>Professional Development Tool</h1>
+        <p>Break through technical bottlenecks in CATIA automation API development. Achieve embedded toolbars, multi-instance compatibility, and seamless UI integration. Supports VBA, C#, VB.NET and more.</p>
+        <div class="hero-buttons">
+          <a href="#pricing" class="btn btn-primary">
+            <i class="fas fa-download"></i>
+            <span>Download Now</span>
+          </a>
+          <a href="https://github.com/looksail/CATIA_V5_EasyToolbar" target="_blank" class="btn btn-secondary">
+            <i class="fab fa-github"></i>
+            <span>GitHub</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fas fa-cube"></i></div>
+            <div>
+              <div class="card-title">CATIA V5 EasyToolbar</div>
+              <div class="card-subtitle">V2.01 Technical Docs</div>
+            </div>
+          </div>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> 3 Configurable Embedded Toolbars</li>
+            <li><i class="fas fa-check-circle"></i> Supports R18 to R36 (2026)</li>
+            <li><i class="fas fa-check-circle"></i> 6 Button Calling Methods</li>
+            <li><i class="fas fa-check-circle"></i> Multi-Instance CATIA Support</li>
+            <li><i class="fas fa-check-circle"></i> Multi-Language Support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number">6+</div>
+        <div class="stat-label">Calling Methods</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">19</div>
+        <div class="stat-label">CATIA Versions</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">90+</div>
+        <div class="stat-label">Button Configs</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">4</div>
+        <div class="stat-label">Languages</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-header">
+      <h2>Core <span>Features</span></h2>
+      <p>Complete solution for CATIA secondary development, breaking through traditional limitations</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-th-large"></i></div>
+        <h3>Embedded Toolbars</h3>
+        <p>Provides 3 configurable CATIA-embedded toolbars and menus, with 1-30 buttons per toolbar, seamlessly integrated into the native CATIA interface.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-code-branch"></i></div>
+        <h3>Multi-Instance Support</h3>
+        <p>Solves the limitation of standard interfaces only connecting to the first CATIA instance. Supports EXE2, COMEXE, COMDLL and more for passing CATIA instances.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-window-restore"></i></div>
+        <h3>Embedded Forms</h3>
+        <p>Forms called via VBA, COMDLL and COMDLL64 pop up embedded in the CATIA environment, providing a native-like experience.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-globe"></i></div>
+        <h3>Multi-Language</h3>
+        <p>Supports custom multi-language environments. Configure French, German, Simplified Chinese, Italian, Japanese, Korean and more.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-plug"></i></div>
+        <h3>PLM Integration</h3>
+        <p>Toolbar buttons can enable or disable other buttons in Login/Logout mode, facilitating plugin development for PLM systems.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-rocket"></i></div>
+        <h3>Quick Deployment</h3>
+        <p>Provides complete installation source code, supports simultaneous multi-version installation, and automatic desktop shortcut creation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solutions Section -->
+  <section class="solutions" id="solutions">
+    <div class="section-header">
+      <h2>Development <span>Solutions</span></h2>
+      <p>6 button calling methods to meet different development needs</p>
+    </div>
+    <div class="solutions-grid">
+      <div class="solution-card">
+        <div class="solution-header">
+          <div class="solution-number">1</div>
+          <h3>VBA Macro</h3>
+        </div>
+        <p>Leverage CATIA's built-in macro recording. Record operations via the interface and modify the generated macros. Suitable for entry-level users, short learning curve, always gets the correct CATIA instance.</p>
+        <div class="solution-tags">
+          <span class="tag">CATVBA</span>
+          <span class="tag">Beginner</span>
+        </div>
+      </div>
+      <div class="solution-card">
+        <div class="solution-header">
+          <div class="solution-number">2</div>
+          <h3>EXE2 External</h3>
+        </div>
+        <p>Receives CATIA instance from command line. Suitable for interactive functions like SelectElement3 that get stuck in COMDLL64.</p>
+        <div class="solution-tags">
+          <span class="tag">C#</span>
+          <span class="tag">VB.NET</span>
+          <span class="tag">Interactive</span>
+        </div>
+      </div>
+      <div class="solution-card">
+        <div class="solution-header">
+          <div class="solution-number">3</div>
+          <h3>COMDLL64 Component</h3>
+        </div>
+        <p>64-bit COM component developed via .NET Framework. Forms pop up embedded in CATIA. Recommended for C# and VB.NET, compile for x64 architecture.</p>
+        <div class="solution-tags">
+          <span class="tag">.NET Framework</span>
+          <span class="tag">x64</span>
+          <span class="tag">Recommended</span>
+        </div>
+      </div>
+      <div class="solution-card">
+        <div class="solution-header">
+          <div class="solution-number">4</div>
+          <h3>COMEXE / COMDLL</h3>
+        </div>
+        <p>ActiveX EXE and DLL components supporting CATIA instance passing. COMDLL only supports older versions like R18, use COMDLL64 instead.</p>
+        <div class="solution-tags">
+          <span class="tag">VB6</span>
+          <span class="tag">Legacy</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing" id="pricing">
+    <div class="section-header">
+      <h2>Pricing <span>Plans</span></h2>
+      <p>Choose the plan that fits your needs</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-header">
+          <h3>Explorer</h3>
+          <p>For beginners to learn and test</p>
+          <div class="pricing-price">Free <span>/ 2 weeks</span></div>
+        </div>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> Full source code access</li>
+          <li><i class="fas fa-check"></i> All demo examples</li>
+          <li><i class="fas fa-check"></i> Documentation support</li>
+          <li><i class="fas fa-check"></i> Community support</li>
+          <li class="disabled"><i class="fas fa-times"></i> No time limit</li>
+          <li class="disabled"><i class="fas fa-times"></i> Commercial distribution</li>
+        </ul>
+        <button class="btn btn-secondary">Download Free</button>
+      </div>
+      <div class="pricing-card featured" data-label="RECOMMENDED">
+        <div class="pricing-header">
+          <h3>Subscription</h3>
+          <p>For professional developers</p>
+          <div class="pricing-price">Contact Us<span>/ year</span></div>
+        </div>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> All Explorer features</li>
+          <li><i class="fas fa-check"></i> No time limit</li>
+          <li><i class="fas fa-check"></i> Commercial distribution license</li>
+          <li><i class="fas fa-check"></i> Email technical support</li>
+          <li><i class="fas fa-check"></i> Version updates</li>
+          <li><i class="fas fa-check"></i> PLM integration support</li>
+        </ul>
+        <a href="mailto:looksail@gmail.com" class="btn btn-primary">
+          <i class="fas fa-envelope"></i>
+          <span>Subscribe Now</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta" id="contact">
+    <div class="cta-content">
+      <h2>Start Your <span>CATIA</span> Development Journey</h2>
+      <p>Join CATIA developers worldwide. Use EasyToolbar to break through technical bottlenecks and efficiently complete customized development tasks.</p>
+      <div class="hero-buttons">
+        <a href="https://github.com/looksail/CATIA_V5_EasyToolbar" target="_blank" class="btn btn-primary">
+          <i class="fab fa-github"></i>
+          <span>Visit GitHub</span>
+        </a>
+        <a href="mailto:looksail@gmail.com" class="btn btn-secondary">
+          <i class="fas fa-envelope"></i>
+          <span>Contact Support</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>CATIA_V5_EasyToolbar</h3>
+        <p>Professional CATIA V5 development tool. Making development easier and more efficient.</p>
+        <div class="social-links">
+          <a href="https://github.com/looksail/CATIA_V5_EasyToolbar" target="_blank"><i class="fab fa-github"></i></a>
+          <a href="mailto:looksail@gmail.com"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#solutions">Solutions</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://github.com/looksail/CATIA_V5_EasyToolbar" target="_blank">Documentation</a></li>
+          <li><a href="https://github.com/looksail/CATIA_V5_EasyToolbar" target="_blank">Examples</a></li>
+          <li><a href="mailto:looksail@gmail.com">Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">License</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 EasyToolbar. All rights reserved.</div>
+      <div>Designed for CATIA V5 Developers</div>
+    </div>
+  </footer>
+</body>
+</html>
