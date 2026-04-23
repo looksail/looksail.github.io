@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -112,15 +112,16 @@
       cursor: pointer;
     }
 
-    /* Hero Section */
+    /* Hero Section - 核心调整：拆分布局为 文本区 + 图片区 */
     .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-height: auto; /* 取消最小高度，适配内容 */
       padding: 140px 5% 80px;
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .hero::before {
@@ -136,20 +137,28 @@
       pointer-events: none;
     }
 
-    .hero-content {
+    /* 双列文本+卡片区 */
+    .hero-top-content {
       max-width: 1200px;
       width: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 60px;
       align-items: center;
+      margin-bottom: 40px; /* 与图片区保持间距 */
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
     .hero-text h1 {
-      font-size: clamp(1.5rem, 2vw, 2rem);
+      font-size: clamp(1.8rem, 2.8vw, 2.8rem);
       font-weight: 800;
       line-height: 1.1;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .hero-text h1 span {
@@ -159,66 +168,44 @@
       background-clip: text;
     }
 
-    /* Slogan Banner - 核心修改部分 */
+    /* Slogan Banner - 从左到右闪光 */
     .slogan-banner {
       background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(124, 58, 237, 0.15) 100%);
       border: 1px solid rgba(0, 212, 255, 0.3);
       border-radius: 12px;
-      padding: 20px 24px; /* 增加内边距适配更大字体 */
-      margin-bottom: 24px;
+      padding: 16px 24px;
+      margin-bottom: 10px;
       position: relative;
       overflow: hidden;
-      width: 100%; /* 确保横幅宽度100% */
-      /* 新增闪光动画相关 */
-      position: relative;
-      z-index: 1;
-    }
-
-    /* 闪光效果伪元素 */
-    .slogan-banner::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.2), 
-        transparent);
-      animation: shine 2s infinite linear;
-      z-index: 2;
-    }
-
-    /* 闪光动画 */
-    @keyframes shine {
-      0% {
-        left: -100%;
-      }
-      100% {
-        left: 100%;
-      }
     }
 
     .slogan-banner::before {
       content: '';
       position: absolute;
       top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--gradient-1);
-      z-index: 1;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      animation: shine 2s infinite linear;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      100% { left: 100%; }
     }
 
     .slogan-banner p {
-      font-size: 1.3rem; /* 字体改大一号（原1.1rem） */
+      font-size: 1.6rem;
       font-weight: 600;
       color: var(--primary);
       margin: 0;
       text-align: center;
       position: relative;
-      z-index: 3; /* 确保文字在闪光层上方 */
+      z-index: 1;
     }
 
     .slogan-banner .highlight {
@@ -232,7 +219,7 @@
     .hero-text > p {
       font-size: 1.125rem;
       color: var(--text-secondary);
-      margin-bottom: 40px;
+      margin-bottom: 20px;
       max-width: 500px;
     }
 
@@ -355,6 +342,20 @@
     .feature-list i {
       color: var(--primary);
       font-size: 1rem;
+    }
+
+    /* 核心：图片区 - 占满整行宽度 */
+    .hero-image-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto; /* 居中 */
+    }
+
+    .hero-image {
+      width: 100%; /* 强制占满容器宽度 */
+      height: auto; /* 保持宽高比 */
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
     }
 
     /* Stats Section */
@@ -586,19 +587,6 @@
       box-shadow: var(--shadow-glow);
     }
 
-    .pricing-card.featured::before {
-      content: attr(data-label);
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--gradient-1);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
     .pricing-card:hover {
       transform: translateY(-4px);
     }
@@ -802,13 +790,14 @@
 
     /* Responsive */
     @media (max-width: 1024px) {
-      .hero-content {
+      .hero-top-content {
         grid-template-columns: 1fr;
         text-align: center;
+        margin-bottom: 30px;
       }
 
       .hero-text p {
-        margin: 0 auto 40px;
+        margin: 0 auto 20px;
       }
 
       .hero-buttons {
@@ -816,8 +805,8 @@
       }
 
       .slogan-banner {
-        margin: 0 auto 24px;
-        max-width: 100%; /* 响应式下也保持100%宽度 */
+        margin: 0 auto 16px;
+        max-width: 500px;
       }
 
       .features-grid {
@@ -860,7 +849,7 @@
       }
 
       .slogan-banner p {
-        font-size: 1.15rem; /* 移动端适配字体大小 */
+        font-size: 1rem;
       }
     }
 
@@ -894,27 +883,24 @@
     <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
   </nav>
 
-  <!-- Hero Section -->
+  <!-- Hero Section - 拆分为 双列文本区 + 整行图片区 -->
   <section class="hero">
-    <div class="hero-content">
+    <!-- 顶部双列：左侧文本 + 右侧卡片 -->
+    <div class="hero-top-content">
       <div class="hero-text">
-        <!-- Slogan Banner - 修改后的横幅 -->
         <div class="slogan-banner">
           <p>AI writes code, I integrate; <span class="highlight">10 minutes</span> to build enterprise CATIA plugins</p>
         </div>
         <h1>CATIA V5 <span>EasyToolbar</span><br>Professional Development Tool</h1>
         <p>Break through technical bottlenecks in CATIA automation API development. Achieve embedded toolbars, multi-instance compatibility, and seamless UI integration. Supports VBA, C#, VB.NET and more.</p>
         <div class="hero-buttons">
-          <a href="#pricing" class="btn btn-primary">
-            <i class="fas fa-download"></i>
-            <span>Download Now</span>
-          </a>
-          <a href="https://github.com/looksail/CATIA_V5_EasyToolbar" target="_blank" class="btn btn-secondary">
+          <a href="https://github.com/looksail/CATIA_V5_EasyToolbar" target="_blank" class="btn btn-primary">
             <i class="fab fa-github"></i>
             <span>GitHub</span>
           </a>
         </div>
       </div>
+
       <div class="hero-visual">
         <div class="hero-card">
           <div class="card-header">
@@ -933,6 +919,11 @@
           </ul>
         </div>
       </div>
+    </div>
+
+    <!-- 核心：整行图片区（红框位置） -->
+    <div class="hero-image-container">
+      <img src="https://github.com/user-attachments/assets/6b97d211-efd6-45ac-aaf4-293e0434f1f5" alt="CATIA_V5_EasyToolbar 展示图" class="hero-image">
     </div>
   </section>
 
@@ -1058,7 +1049,7 @@
   <section class="pricing" id="pricing">
     <div class="section-header">
       <h2>Pricing <span>Plans</span></h2>
-      <p>Choose the plan that fits your needs</p>
+      <p>See documentation on Github</p>
     </div>
     <div class="pricing-grid">
       <div class="pricing-card">
@@ -1075,9 +1066,8 @@
           <li class="disabled"><i class="fas fa-times"></i> No time limit</li>
           <li class="disabled"><i class="fas fa-times"></i> Commercial distribution</li>
         </ul>
-        <button class="btn btn-secondary">Download Free</button>
       </div>
-      <div class="pricing-card featured" data-label="RECOMMENDED">
+      <div class="pricing-card featured">
         <div class="pricing-header">
           <h3>Subscription</h3>
           <p>For professional developers</p>
@@ -1091,10 +1081,6 @@
           <li><i class="fas fa-check"></i> Version updates</li>
           <li><i class="fas fa-check"></i> PLM integration support</li>
         </ul>
-        <a href="mailto:looksail@gmail.com" class="btn btn-primary">
-          <i class="fas fa-envelope"></i>
-          <span>Subscribe Now</span>
-        </a>
       </div>
     </div>
   </section>
@@ -1154,7 +1140,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <div>&copy; 2026 EasyToolbar. All rights reserved.</div>
+      <div>&copy; 2026 CATIA_V5_EasyToolbar. All rights reserved.</div>
       <div>Designed for CATIA V5 Developers</div>
     </div>
   </footer>
